@@ -1,0 +1,77 @@
+---
+# Install PHP modules
+
+- name: php5 - add modules and configuration
+  apt: pkg=php5-curl,php5-intl,php5-mysql,php5-mcrypt,php5-gd,php-apc state=latest update_cache=yes
+  notify:
+    - restart-nginx
+    - restart-php5-fpm
+  tags: php
+
+- name: php5 - configure modules
+  copy: src=etc/php5/mods-available/{{ item.name }} dest=/etc/php5/mods-available/{{ item.name }}
+  with_items:
+    - { name: global.ini }
+    - { name: intl.ini }
+    - { name: curl.ini }
+    - { name: json.ini }
+    - { name: pdo.ini }
+    - { name: mysql.ini }
+  notify:
+    - restart-nginx
+    - restart-php5-fpm
+  tags: php
+
+- name: php5 - fpm specific configuration
+  copy: src=etc/php5/fpm/conf.d/global_fpm.ini dest=/etc/php5/fpm/conf.d/global_fpm.ini
+  notify:
+    - restart-nginx
+    - restart-php5-fpm
+  tags: php
+
+- name: php5 - cli specific configuration
+  copy: src=etc/php5/cli/conf.d/global_cli.ini dest=/etc/php5/cli/conf.d/global_cli.ini
+  notify:
+    - restart-nginx
+    - restart-php5-fpm
+  tags: php
+
+- name: php5 - enable modules
+  command: php5enmod -s ALL {{ item.name }}
+  with_items:
+    - { name: global }
+    - { name: intl }
+    - { name: curl }
+    - { name: json }
+    - { name: pdo }
+    - { name: mysql }
+  notify:
+    - restart-nginx
+    - restart-php5-fpm
+  tags: php
+
+- name: php5 - add development modules
+  when: env != "prod"
+  apt: pkg=php5-xdebug,php5-sqlite state=latest update_cache=yes
+  tags: php
+
+- name: php5 - configure development modules
+  when: env != "prod"
+  copy: src=etc/php5/mods-available/{{ item.name }} dest=/etc/php5/mods-available/{{ item.name }}
+  with_items:
+    - { name: xdebug.ini }
+    - { name: sqlite3.ini }
+  notify:
+    - restart-nginx
+    - restart-php5-fpm
+  tags: php
+
+- name: php5 - enable development modules
+  command: php5enmod -s ALL {{ item.name }}
+  with_items:
+    - { name: xdebug }
+    - { name: sqlite3 }
+  notify:
+    - restart-nginx
+    - restart-php5-fpm
+  tags: php

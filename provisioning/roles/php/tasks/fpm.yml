@@ -1,0 +1,16 @@
+---
+# Install and configure PHP
+
+- name: php5-fpm - install PHP FPM
+  apt: pkg=php5-fpm state=latest update_cache=yes
+  tags: php
+
+- name: php5 - remove default pool
+  file: dest=/etc/php5/fpm/pool.d/www.conf state=absent
+  notify: restart-php5-fpm
+  tags: php
+
+- name: php5 - add application pool
+  template: src=etc/php5/fpm/pool.d/pool.conf dest=/etc/php5/fpm/pool.d/{{ app.name }}.conf owner=root group=root mode=0644
+  notify: restart-php5-fpm
+  tags: php

@@ -1,0 +1,20 @@
+---
+# Akeneo provisioning playbook
+
+- name: Install common packages and configure common settigns to all nodes
+  hosts: all
+  sudo: yes
+  gather_facts: true
+  roles:
+    - common
+
+- name: Install Nginx, PHP-FPM, PHP 5.5 and MySQL on akeneo nodes
+  hosts: all
+  sudo: yes
+  gather_facts: true
+  roles:
+    - nginx
+    - php
+    - mysql
+    - java
+    - akeneo

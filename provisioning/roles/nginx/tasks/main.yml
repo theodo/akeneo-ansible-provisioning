@@ -1,0 +1,18 @@
+---
+# Nginx configuration
+
+- name: add stable repository
+  apt_repository: repo=ppa:nginx/stable update_cache=yes
+
+- name: install light version
+  apt: pkg=nginx-light state=latest update_cache=yes
+
+- name: remove default vhost
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+
+- name: install vhost
+  template: src=etc/nginx/site-available/vhost dest=/etc/nginx/sites-available/{{app.name}} owner=root group=root mode=0644
+
+- name: link vhost
+  file: src=/etc/nginx/sites-available/{{app.name}} dest=/etc/nginx/sites-enabled/{{app.name}} state=link force=yes
+  notify: restart-nginx

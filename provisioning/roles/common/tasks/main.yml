@@ -1,0 +1,8 @@
+---
+# wrapper for common tasks
+
+- include: base_packages.yml
+- include: time.yml
+- include: network.yml
+- include: users.yml
+- include: sudo.yml

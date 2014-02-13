@@ -1,0 +1,27 @@
+---
+# Install Akeneo
+
+- name: download Akeneo's archive
+  command: curl -sS http://www.akeneo.com/pim-community-standard-{{ akeneo.version }}.tar.gz -o /tmp/pim-community-standard-{{ akeneo.version }}.tar.gz
+  tags: akeneo
+
+# Todo: try something better than creating the full path, removing "current" and moving akeneo into "current" then...
+- name: install Akeneo
+  command: "{{ item }}"
+  with_items:
+    - chdir=/tmp tar -xvzf /tmp/pim-community-standard-{{ akeneo.version }}.tar.gz
+    - mkdir -p {{ app.path }}
+    - rm -rf {{ app.path }}/../current
+    - mv /tmp/pim-community-standard-{{ akeneo.version }} {{ app.path }}
+  tags: akeneo
+
+- name: finish Akeneo install
+  command: chdir={{ app.path }} {{ item }}
+  with_items:
+    - php app/console pim:install --env=dev
+    - php app/console cache:clear --env=dev
+  tags: akeneo
+
+- name: setup permissions
+  file: owner={{ app.user }} group={{ app.group }} state=directory path={{ app.path }} recurse=true
+  tags: akeneo

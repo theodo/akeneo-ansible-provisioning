@@ -1,0 +1,26 @@
+env: dev # used to install fome PHP modules on dev but not on prod environment
+
+app:
+  name: akeneo
+  path: /var/www/akeneo/current
+  user: www-data
+  group: www-data
+
+akeneo:
+  version: v1.0.0-RC1
+
+# Default values, set in the Akeneo app/config/parameters.yml configuration file
+mysql:
+  user: akeneo_pim
+  password: akeneo_pim
+  database: akeneo_pim
+
+nginx:
+  root: "{{ app.path }}/web"
+  server_name: akeneo.local
+
+fpm:
+  socket_path: /tmp/{{ app.name }}.sock
+
+composer:
+  bin_path: /usr/bin

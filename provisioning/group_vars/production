@@ -1,0 +1,4 @@
+env: prod
+
+nginx:
+    server_name: akeneo.theodo.fr

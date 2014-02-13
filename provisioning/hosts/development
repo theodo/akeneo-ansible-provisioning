@@ -1,0 +1,5 @@
+[akeneo:children]
+development
+
+[development]
+10.0.0.30

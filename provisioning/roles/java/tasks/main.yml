@@ -1,0 +1,4 @@
+---
+- name: Install OpenJDK Java JRE 7
+  apt: pkg=openjdk-7-jre state=latest update_cache=yes
+  tags: java

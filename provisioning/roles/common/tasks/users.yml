@@ -1,0 +1,17 @@
+---
+# configure www-data user
+
+- name: update www-data shell
+  user: name=www-data shell=/bin/bash
+
+- name: set correct permissions
+  file: $item
+  with_items:
+      - path=/var/www owner=www-data group=www-data mode=0755 state=directory
+      - path=/var/www/.ssh owner=www-data group=www-data mode=0700 state=directory
+
+- name: add www-data to sudoers
+  copy: src=etc/sudoers.d/10-www-data dest=/etc/sudoers.d/10-www-data owner=root group=root mode=0440 validate="visudo -cf %s"
+
+- name: add developer public keys
+  copy: src=var/www/.ssh/authorized_keys dest=/var/www/.ssh/authorized_keys owner=www-data group=www-data mode=0600

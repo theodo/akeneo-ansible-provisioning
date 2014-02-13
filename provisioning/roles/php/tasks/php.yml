@@ -1,0 +1,12 @@
+---
+- name: php5 - add zanfur repository
+  apt_repository: repo=ppa:zanfur/php5.5 update_cache=yes
+  tags: php
+
+- name: php5 - add ondrej repository
+  apt_repository: repo=ppa:ondrej/php5 update_cache=yes
+  tags: php
+
+- name: php5 - install 5.5 version
+  apt: pkg=php5-cli state=latest update_cache=yes
+  tags: php

@@ -1,0 +1,12 @@
+---
+# Install and configure composer
+
+- name: composer - install composer
+  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
+  tags:
+    - php
+    - composer
+
+- name: composer - alias composer executable
+  shell: mv /usr/local/bin/composer.phar "{{ composer.bin_path|default('/usr/local/bin/composer') }}/composer"
+  tags: composer

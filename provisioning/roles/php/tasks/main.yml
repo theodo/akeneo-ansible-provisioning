@@ -1,0 +1,7 @@
+---
+# Install and configure PHP, FPM and Composer
+
+- include: php.yml
+- include: fpm.yml
+- include: modules.yml
+- include: composer.yml
